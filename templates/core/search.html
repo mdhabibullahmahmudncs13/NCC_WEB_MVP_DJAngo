@@ -1,0 +1,261 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <h1 class="display-5 font-light text-dark mb-4">Search</h1>
+            <p class="lead text-muted mx-auto leading-relaxed" style="max-width: 600px;">
+                Find content across our website including members, events, projects, and more
+            </p>
+        </div>
+
+        <!-- Search Form -->
+        <div class="row mb-5">
+            <div class="col-lg-8 mx-auto">
+                {% crispy form %}
+            </div>
+        </div>
+
+        <!-- Search Results -->
+        {% if query %}
+        <div class="mb-4">
+            <h2 class="h4 fw-semibold">Search Results for "{{ query }}"</h2>
+            <p class="text-muted">Found {{ total_results }} result{{ total_results|pluralize }} in {{ category|default:"all categories" }}</p>
+        </div>
+
+        {% if results %}
+            <!-- Members Results -->
+            {% if results.members %}
+            <div class="mb-5">
+                <h3 class="h5 fw-semibold mb-3">
+                    <i class="bi bi-people me-2"></i>Members ({{ results.members|length }})
+                </h3>
+                <div class="row g-3">
+                    {% for member in results.members %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-3">
+                                    {% if member.photo %}
+                                    <img src="{{ member.photo.url }}" class="rounded-circle me-3" style="width: 50px; height: 50px; object-fit: cover;" alt="{{ member.name }}">
+                                    {% else %}
+                                    <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3 text-white fw-bold" style="width: 50px; height: 50px;">
+                                        {{ member.name|first }}
+                                    </div>
+                                    {% endif %}
+                                    <div>
+                                        <h5 class="mb-1">{{ member.name }}</h5>
+                                        <small class="text-muted">{{ member.role }}</small>
+                                    </div>
+                                </div>
+                                <p class="text-muted small">{{ member.bio|truncatewords:15 }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Events Results -->
+            {% if results.events %}
+            <div class="mb-5">
+                <h3 class="h5 fw-semibold mb-3">
+                    <i class="bi bi-calendar me-2"></i>Events ({{ results.events|length }})
+                </h3>
+                <div class="row g-3">
+                    {% for event in results.events %}
+                    <div class="col-md-6">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="badge bg-{{ event.status|default:'secondary' }}">{{ event.get_status_display }}</span>
+                                    <small class="text-muted">{{ event.date|date:"M d, Y" }}</small>
+                                </div>
+                                <h5 class="card-title">
+                                    <a href="{% url 'core:event_detail' event.pk %}" class="text-decoration-none">{{ event.title }}</a>
+                                </h5>
+                                <p class="text-muted">{{ event.description|truncatewords:20 }}</p>
+                                {% if event.location %}
+                                <small class="text-muted"><i class="bi bi-geo-alt me-1"></i>{{ event.location }}</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Achievements Results -->
+            {% if results.achievements %}
+            <div class="mb-5">
+                <h3 class="h5 fw-semibold mb-3">
+                    <i class="bi bi-trophy me-2"></i>Achievements ({{ results.achievements|length }})
+                </h3>
+                <div class="row g-3">
+                    {% for achievement in results.achievements %}
+                    <div class="col-md-6">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="badge bg-warning text-dark">{{ achievement.get_category_display }}</span>
+                                    <small class="text-muted">{{ achievement.date|date:"M d, Y" }}</small>
+                                </div>
+                                <h5 class="card-title">{{ achievement.title }}</h5>
+                                <p class="text-muted">{{ achievement.description|truncatewords:20 }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Blog Posts Results -->
+            {% if results.blog_posts %}
+            <div class="mb-5">
+                <h3 class="h5 fw-semibold mb-3">
+                    <i class="bi bi-newspaper me-2"></i>News & Updates ({{ results.blog_posts|length }})
+                </h3>
+                <div class="row g-3">
+                    {% for post in results.blog_posts %}
+                    <div class="col-md-6">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="mb-2">
+                                    {% for tag in post.tags_list %}
+                                        {% if tag %}
+                                        <span class="badge bg-primary bg-opacity-10 text-primary me-1">{{ tag }}</span>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <h5 class="card-title">
+                                    <a href="{% url 'core:blog_detail' post.slug %}" class="text-decoration-none">{{ post.title }}</a>
+                                </h5>
+                                <p class="text-muted">{{ post.excerpt|truncatewords:20 }}</p>
+                                <small class="text-muted">
+                                    <i class="bi bi-person me-1"></i>{{ post.author.get_full_name|default:post.author.username }}
+                                    <i class="bi bi-calendar ms-3 me-1"></i>{{ post.published_at|date:"M d, Y" }}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Projects Results -->
+            {% if results.projects %}
+            <div class="mb-5">
+                <h3 class="h5 fw-semibold mb-3">
+                    <i class="bi bi-code-square me-2"></i>Projects ({{ results.projects|length }})
+                </h3>
+                <div class="row g-3">
+                    {% for project in results.projects %}
+                    <div class="col-md-6">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="badge bg-success">{{ project.get_status_display }}</span>
+                                    {% if project.segment %}
+                                    <span class="badge bg-info bg-opacity-10 text-info">{{ project.segment.title }}</span>
+                                    {% endif %}
+                                </div>
+                                <h5 class="card-title">
+                                    <a href="{% url 'core:project_detail' project.pk %}" class="text-decoration-none">{{ project.title }}</a>
+                                </h5>
+                                <p class="text-muted">{{ project.description|truncatewords:20 }}</p>
+                                <div class="mt-2">
+                                    {% for tech in project.technologies_list %}
+                                        {% if tech and forloop.counter <= 3 %}
+                                        <span class="badge bg-light text-dark me-1">{{ tech }}</span>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Resources Results -->
+            {% if results.resources %}
+            <div class="mb-5">
+                <h3 class="h5 fw-semibold mb-3">
+                    <i class="bi bi-folder me-2"></i>Resources ({{ results.resources|length }})
+                </h3>
+                <div class="row g-3">
+                    {% for resource in results.resources %}
+                    <div class="col-md-6">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="badge bg-secondary bg-opacity-10 text-secondary">{{ resource.get_category_display }}</span>
+                                    <small class="text-muted">
+                                        <i class="bi bi-download me-1"></i>{{ resource.downloads }}
+                                    </small>
+                                </div>
+                                <h5 class="card-title">{{ resource.title }}</h5>
+                                <p class="text-muted">{{ resource.description|truncatewords:20 }}</p>
+                                <a href="{% url 'core:resource_download' resource.pk %}" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-{% if resource.file %}download{% else %}link-45deg{% endif %} me-1"></i>
+                                    {% if resource.file %}Download{% else %}Visit{% endif %}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+        {% else %}
+        <!-- No Results -->
+        <div class="text-center py-5">
+            <div class="empty-icon mb-4">
+                <i class="bi bi-search text-muted" style="font-size: 4rem;"></i>
+            </div>
+            <h3 class="h5 text-muted mb-3">No Results Found</h3>
+            <p class="text-muted">
+                Try different keywords or browse our content directly:
+            </p>
+            <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+                <a href="{% url 'core:members' %}" class="btn btn-sm btn-outline-primary">Members</a>
+                <a href="{% url 'core:events' %}" class="btn btn-sm btn-outline-primary">Events</a>
+                <a href="{% url 'core:projects' %}" class="btn btn-sm btn-outline-primary">Projects</a>
+                <a href="{% url 'core:blog' %}" class="btn btn-sm btn-outline-primary">News</a>
+                <a href="{% url 'core:resources' %}" class="btn btn-sm btn-outline-primary">Resources</a>
+            </div>
+        </div>
+        {% endif %}
+
+        {% else %}
+        <!-- Search Tips -->
+        <div class="bg-light rounded-4 p-4 p-lg-5">
+            <h3 class="h4 fw-semibold mb-3">Search Tips</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="bi bi-lightbulb text-warning me-2"></i>Use specific keywords for better results</li>
+                        <li class="mb-2"><i class="bi bi-lightbulb text-warning me-2"></i>Try searching for member names, event titles, or project names</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="bi bi-lightbulb text-warning me-2"></i>Filter by category to narrow down results</li>
+                        <li class="mb-2"><i class="bi bi-lightbulb text-warning me-2"></i>Search works across titles, descriptions, and tags</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

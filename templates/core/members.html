@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <h1 class="display-5 font-light text-dark mb-4">Our Panel</h1>
+            <p class="lead text-muted mx-auto leading-relaxed" style="max-width: 600px;">
+                Meet the dedicated members who drive innovation and excellence in our community
+            </p>
+        </div>
+
+        <!-- Filter by Segment -->
+        {% if segments %}
+        <div class="row mb-4">
+            <div class="col-md-6 mx-auto">
+                <form method="GET" class="d-flex gap-2">
+                    <select name="segment" class="form-select" onchange="this.form.submit()">
+                        <option value="">All Segments</option>
+                        {% for segment in segments %}
+                        <option value="{{ segment.pk }}" {% if request.GET.segment == segment.pk|stringformat:"s" %}selected{% endif %}>
+                            {{ segment.title }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='{% url 'core:members' %}'">
+                        Clear
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Members Grid -->
+        {% if members %}
+        <div class="row g-4">
+            {% for member in members %}
+            <div class="col-sm-6 col-md-4 col-lg-3">
+                <div class="member-card h-100">
+                    <!-- Photo -->
+                    {% if member.photo %}
+                        <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="member-photo">
+                    {% else %}
+                        <div class="member-initial">
+                            {{ member.name|first|upper }}
+                        </div>
+                    {% endif %}
+                    
+                    <!-- Info -->
+                    <div>
+                        <h3 class="h6 fw-semibold text-dark mb-1 leading-tight">{{ member.name }}</h3>
+                        {% if member.role %}
+                            <p class="small text-muted mb-0">{{ member.role }}</p>
+                        {% endif %}
+                        {% if member.segment %}
+                            <p class="small text-primary mb-0">{{ member.segment.title }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if is_paginated %}
+        <div class="d-flex justify-content-center mt-5">
+            <nav>
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1{% if request.GET.segment %}&segment={{ request.GET.segment }}{% endif %}">&laquo; First</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.segment %}&segment={{ request.GET.segment }}{% endif %}">Previous</a>
+                        </li>
+                    {% endif %}
+                    
+                    <li class="page-item active">
+                        <span class="page-link">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                    </li>
+                    
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.segment %}&segment={{ request.GET.segment }}{% endif %}">Next</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.segment %}&segment={{ request.GET.segment }}{% endif %}">Last &raquo;</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+
+        {% else %}
+        <!-- Empty State -->
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="bi bi-people"></i>
+            </div>
+            <h3 class="h5 text-muted mb-3">No Members Yet</h3>
+            <p class="text-muted">
+                Our team profiles are being updated. Check back soon to meet our amazing members!
+            </p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

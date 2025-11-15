@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <h1 class="display-5 font-light text-dark mb-4">About NITER Computer Club</h1>
+            <p class="lead text-muted mx-auto leading-relaxed" style="max-width: 700px;">
+                Empowering the next generation of technology leaders through innovation, collaboration, and excellence in computer science education.
+            </p>
+        </div>
+
+        <!-- Mission & Vision -->
+        <div class="row g-5 mb-5">
+            <div class="col-lg-6">
+                <div class="card h-100 border-0 shadow-custom">
+                    <div class="card-body p-4 p-lg-5">
+                        <div class="d-flex align-items-center mb-4">
+                            <div class="bg-primary bg-opacity-10 rounded-3 p-3 me-3">
+                                <i class="bi bi-eye text-primary" style="font-size: 1.5rem;"></i>
+                            </div>
+                            <h3 class="h4 fw-semibold mb-0">Our Vision</h3>
+                        </div>
+                        <p class="text-muted leading-relaxed">
+                            To be the leading technology community that bridges academic knowledge and industry excellence, 
+                            fostering innovation and creating skilled professionals ready for the global technology landscape.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card h-100 border-0 shadow-custom">
+                    <div class="card-body p-4 p-lg-5">
+                        <div class="d-flex align-items-center mb-4">
+                            <div class="bg-success bg-opacity-10 rounded-3 p-3 me-3">
+                                <i class="bi bi-target text-success" style="font-size: 1.5rem;"></i>
+                            </div>
+                            <h3 class="h4 fw-semibold mb-0">Our Mission</h3>
+                        </div>
+                        <p class="text-muted leading-relaxed">
+                            To provide comprehensive technical education, practical experience, and professional development 
+                            opportunities that empower students to excel in technology careers and contribute meaningfully to society.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- What We Do -->
+        <div class="row mb-5">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="h3 fw-semibold mb-4">What We Do</h2>
+                <p class="text-muted leading-relaxed mb-5">
+                    The NITER Computer Club serves as a comprehensive platform for technology education, 
+                    innovation, and professional development within our academic community.
+                </p>
+                
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="text-center">
+                            <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 64px; height: 64px;">
+                                <i class="bi bi-code-slash text-primary" style="font-size: 1.5rem;"></i>
+                            </div>
+                            <h4 class="h6 fw-semibold mb-3">Skill Development</h4>
+                            <p class="text-muted small leading-relaxed">
+                                Comprehensive training in programming languages, frameworks, and emerging technologies.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-center">
+                            <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 64px; height: 64px;">
+                                <i class="bi bi-trophy text-success" style="font-size: 1.5rem;"></i>
+                            </div>
+                            <h4 class="h6 fw-semibold mb-3">Competitions</h4>
+                            <p class="text-muted small leading-relaxed">
+                                Programming contests, hackathons, and innovation challenges to test and showcase skills.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-center">
+                            <div class="bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 64px; height: 64px;">
+                                <i class="bi bi-people text-warning" style="font-size: 1.5rem;"></i>
+                            </div>
+                            <h4 class="h6 fw-semibold mb-3">Community Building</h4>
+                            <p class="text-muted small leading-relaxed">
+                                Creating networks of like-minded individuals passionate about technology and innovation.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-center">
+                            <div class="bg-info bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 64px; height: 64px;">
+                                <i class="bi bi-briefcase text-info" style="font-size: 1.5rem;"></i>
+                            </div>
+                            <h4 class="h6 fw-semibold mb-3">Industry Connection</h4>
+                            <p class="text-muted small leading-relaxed">
+                                Bridging the gap between academic learning and professional industry requirements.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Join Us CTA -->
+        <div class="bg-primary bg-opacity-5 rounded-4 p-4 p-lg-5 text-center">
+            <h2 class="h3 fw-semibold mb-4">Join Our Community</h2>
+            <p class="text-muted mb-4 leading-relaxed">
+                Whether you're a beginner or an experienced developer, there's a place for you in our community.
+            </p>
+            <div class="d-flex flex-column flex-md-row gap-3 justify-content-center">
+                <a href="{% url 'core:members' %}" class="btn btn-primary btn-lg px-5">
+                    Meet Our Members
+                </a>
+                <a href="{% url 'core:events' %}" class="btn btn-outline-primary btn-lg px-5">
+                    View Events
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

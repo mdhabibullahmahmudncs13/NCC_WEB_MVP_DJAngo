@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<div class="hero-section bg-primary text-white py-5 mb-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-3">Photo Gallery</h1>
+                <p class="lead mb-0">Capturing memories from our events and activities</p>
+            </div>
+            <div class="col-lg-4 text-end">
+                <i class="fas fa-images" style="font-size: 4rem; opacity: 0.3;"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container my-5">
+    <!-- Filter Options -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{% url 'core:gallery' %}" class="btn btn-outline-primary btn-sm">All Photos</a>
+                {% for category in categories %}
+                    <a href="?category={{ category.0 }}" class="btn btn-outline-secondary btn-sm">
+                        {{ category.1 }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-md-6 text-end">
+            <small class="text-muted">{{ photos|length }} photo{{ photos|length|pluralize }} found</small>
+        </div>
+    </div>
+
+    <!-- Photo Grid -->
+    <div class="row g-3" id="photo-gallery">
+        {% for photo in photos %}
+        <div class="col-lg-4 col-md-6">
+            <div class="card shadow-sm h-100 photo-card">
+                <div class="photo-wrapper position-relative" style="height: 250px; overflow: hidden;">
+                    <img src="{{ photo.image.url }}" class="card-img-top w-100 h-100" 
+                         alt="{{ photo.title }}" style="object-fit: cover; cursor: pointer;"
+                         onclick="openModal('{{ photo.image.url }}', '{{ photo.title|escapejs }}', '{{ photo.description|escapejs }}')">
+                    
+                    <div class="photo-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-search-plus text-white" style="font-size: 2rem; opacity: 0;"></i>
+                    </div>
+                    
+                    {% if photo.category %}
+                    <div class="position-absolute top-0 start-0 m-2">
+                        <span class="badge bg-primary">{{ photo.get_category_display }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="card-body">
+                    <h6 class="card-title">{{ photo.title }}</h6>
+                    {% if photo.description %}
+                    <p class="card-text small text-muted">{{ photo.description|truncatewords:15 }}</p>
+                    {% endif %}
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">
+                            <i class="fas fa-calendar me-1"></i>
+                            {{ photo.uploaded_at|date:"M d, Y" }}
+                        </small>
+                        {% if photo.photographer %}
+                        <small class="text-muted">
+                            <i class="fas fa-camera me-1"></i>
+                            {{ photo.photographer|truncatechars:15 }}
+                        </small>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="text-center py-5">
+                <i class="fas fa-images text-muted mb-3" style="font-size: 3rem;"></i>
+                <h4 class="text-muted">No Photos Found</h4>
+                <p class="text-muted">There are no photos available in this category. Check back soon!</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <div class="d-flex justify-content-center mt-5">
+        <nav aria-label="Gallery pagination">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1">First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                    </li>
+                {% endif %}
+                
+                <li class="page-item active">
+                    <span class="page-link">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                </li>
+                
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Photo Modal -->
+<div class="modal fade" id="photoModal" tabindex="-1" aria-labelledby="photoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="photoModalLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0 text-center">
+                <img id="modalImage" src="" alt="" class="img-fluid w-100" style="max-height: 80vh; object-fit: contain;">
+            </div>
+            <div class="modal-footer border-0">
+                <p id="modalDescription" class="text-muted small mb-0"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function openModal(imageSrc, title, description) {
+    document.getElementById('modalImage').src = imageSrc;
+    document.getElementById('photoModalLabel').textContent = title;
+    document.getElementById('modalDescription').textContent = description;
+    
+    const modal = new bootstrap.Modal(document.getElementById('photoModal'));
+    modal.show();
+}
+
+// Add hover effects
+document.addEventListener('DOMContentLoaded', function() {
+    const photoCards = document.querySelectorAll('.photo-card');
+    
+    photoCards.forEach(card => {
+        const overlay = card.querySelector('.photo-overlay');
+        const icon = overlay.querySelector('i');
+        
+        card.addEventListener('mouseenter', function() {
+            overlay.style.backgroundColor = 'rgba(0,0,0,0.5)';
+            icon.style.opacity = '1';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            overlay.style.backgroundColor = 'transparent';
+            icon.style.opacity = '0';
+        });
+    });
+});
+</script>
+
+<style>
+.photo-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.photo-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+}
+
+.photo-wrapper {
+    border-radius: 0.375rem 0.375rem 0 0;
+    overflow: hidden;
+}
+
+.photo-overlay {
+    transition: all 0.3s ease;
+    background-color: transparent;
+}
+
+.photo-overlay i {
+    transition: opacity 0.3s ease;
+}
+
+.modal-body img {
+    border-radius: 0.375rem;
+}
+
+@media (max-width: 768px) {
+    .modal-dialog {
+        margin: 10px;
+    }
+    
+    .modal-body img {
+        max-height: 60vh;
+    }
+}
+</style>
+{% endblock %}

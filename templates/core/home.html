@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="hero-content text-center">
+            <!-- Logo -->
+            <div class="mb-4 mb-md-5">
+                {% load static %}
+                <div class="d-inline-flex justify-content-center">
+                    <div class="bg-white rounded-circle p-3" style="width: 100px; height: 100px;">
+                        <img src="{% static 'img/ncc-logo.svg' %}" alt="NITER Computer Club Logo" class="w-100 h-100">
+                    </div>
+                </div>
+            </div>
+            
+            <h1 class="display-4 font-light mb-4 tracking-tight">
+                NITER Computer Club
+            </h1>
+            <p class="lead text-muted mb-4 mb-md-5 font-light leading-relaxed mx-auto" style="max-width: 600px;">
+                Professional Technology Community at National Institute of Textile Engineering & Research
+            </p>
+            
+            <div class="d-flex flex-column flex-md-row gap-3 justify-content-center">
+                <a href="{% url 'core:about' %}" class="btn btn-primary btn-lg px-5 py-3">
+                    Learn More
+                </a>
+                <a href="{% url 'core:members' %}" class="btn btn-outline-gray btn-lg px-5 py-3">
+                    Our Panel
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Core Programs Section -->
+<section class="py-5 py-md-6 bg-white">
+    <div class="container">
+        <div class="text-center mb-5 mb-md-6">
+            <h2 class="display-5 font-light text-dark mb-4">Core Programs</h2>
+            <p class="lead text-muted mx-auto font-light leading-relaxed" style="max-width: 600px;">
+                Professional development programs designed to advance technical competencies and career readiness
+            </p>
+        </div>
+        
+        <div class="row g-4 g-md-5">
+            <!-- Technical Training -->
+            <div class="col-lg-4">
+                <div class="text-center h-100">
+                    <div class="bg-light-blue rounded-3 d-inline-flex align-items-center justify-content-center mb-4" style="width: 64px; height: 64px;">
+                        <i class="bi bi-check-circle text-primary" style="font-size: 1.8rem;"></i>
+                    </div>
+                    <h3 class="h5 fw-semibold mb-3 text-dark">Technical Training</h3>
+                    <p class="text-muted leading-relaxed mb-4">
+                        Comprehensive training programs in modern software development methodologies and emerging technologies.
+                    </p>
+                    <ul class="list-unstyled text-muted small">
+                        <li class="mb-2"><span class="text-primary me-2">•</span>Full-stack Web Development</li>
+                        <li class="mb-2"><span class="text-primary me-2">•</span>Mobile Application Development</li>
+                        <li class="mb-2"><span class="text-primary me-2">•</span>Machine Learning & Data Science</li>
+                        <li class="mb-2"><span class="text-primary me-2">•</span>Cloud Architecture & DevOps</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Industry Collaboration -->
+            <div class="col-lg-4">
+                <div class="text-center h-100">
+                    <div class="d-inline-flex align-items-center justify-content-center mb-4 rounded-3" style="width: 64px; height: 64px; background: #f0f9ff;">
+                        <i class="bi bi-people text-success" style="font-size: 1.8rem;"></i>
+                    </div>
+                    <h3 class="h5 fw-semibold mb-3 text-dark">Industry Collaboration</h3>
+                    <p class="text-muted leading-relaxed mb-4">
+                        Strategic partnerships with leading technology companies providing real-world project experience and career opportunities.
+                    </p>
+                    <ul class="list-unstyled text-muted small">
+                        <li class="mb-2"><span class="text-success me-2">•</span>Enterprise Project Development</li>
+                        <li class="mb-2"><span class="text-success me-2">•</span>Open Source Contributions</li>
+                        <li class="mb-2"><span class="text-success me-2">•</span>Technology Innovation Labs</li>
+                        <li class="mb-2"><span class="text-success me-2">•</span>Professional Mentorship</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Innovation & Research -->
+            <div class="col-lg-4">
+                <div class="text-center h-100">
+                    <div class="d-inline-flex align-items-center justify-content-center mb-4 rounded-3" style="width: 64px; height: 64px; background: #faf5ff;">
+                        <i class="bi bi-lightbulb text-warning" style="font-size: 1.8rem;"></i>
+                    </div>
+                    <h3 class="h5 fw-semibold mb-3 text-dark">Innovation & Research</h3>
+                    <p class="text-muted leading-relaxed mb-4">
+                        Competitive programming and research initiatives fostering innovation and academic excellence in computer science.
+                    </p>
+                    <ul class="list-unstyled text-muted small">
+                        <li class="mb-2"><span class="text-warning me-2">•</span>Programming Competitions</li>
+                        <li class="mb-2"><span class="text-warning me-2">•</span>Research & Development</li>
+                        <li class="mb-2"><span class="text-warning me-2">•</span>Innovation Challenges</li>
+                        <li class="mb-2"><span class="text-warning me-2">•</span>Technical Publications</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Specialized Segments Section -->
+<section class="py-5 py-md-6" style="background-color: #f9fafb;">
+    <div class="container">
+        <div class="text-center mb-5 mb-md-6">
+            <h2 class="display-5 font-light text-dark mb-4">Specialized Segments</h2>
+            <p class="lead text-muted mx-auto font-light leading-relaxed" style="max-width: 600px;">
+                Focused areas of expertise where our members contribute to advancing technology and innovation
+            </p>
+        </div>
+        
+        {% if segments %}
+            <div class="row g-4">
+                {% for segment in segments %}
+                <div class="col-md-6 col-lg-4">
+                    <a href="{% url 'core:segment_detail' segment.pk %}" class="text-decoration-none">
+                        <div class="segment-card h-100">
+                            {% if segment.photo %}
+                                <img src="{{ segment.photo.url }}" alt="{{ segment.title }}" class="w-100 segment-photo">
+                            {% endif %}
+                            
+                            <div class="p-4">
+                                <div class="d-flex align-items-start gap-3 mb-3">
+                                    {% if segment.icon %}
+                                        <div class="segment-icon">
+                                            <span>{{ segment.icon }}</span>
+                                        </div>
+                                    {% endif %}
+                                    <div class="flex-fill">
+                                        <h3 class="h5 fw-semibold text-dark mb-2">{{ segment.title }}</h3>
+                                    </div>
+                                    <div class="opacity-0 transition">
+                                        <i class="bi bi-chevron-right text-primary"></i>
+                                    </div>
+                                </div>
+                                <p class="text-muted leading-relaxed small">
+                                    {{ segment.description|truncatewords:20 }}
+                                </p>
+                                
+                                <div class="mt-3 pt-3 border-top border-light">
+                                    <span class="text-primary small fw-medium d-flex align-items-center gap-2">
+                                        View Details & Members
+                                        <i class="bi bi-arrow-right"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            
+            {% if segments|length >= 6 %}
+            <div class="text-center mt-5">
+                <a href="{% url 'core:segments' %}" class="btn btn-outline-primary">
+                    View All Segments <i class="bi bi-arrow-right ms-2"></i>
+                </a>
+            </div>
+            {% endif %}
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="bi bi-collection"></i>
+                </div>
+                <h3 class="h5 text-muted mb-3">Segments in Development</h3>
+                <p class="text-muted">
+                    Our specialized focus areas are currently being structured. We'll announce our segments soon.
+                </p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 py-md-6 bg-white border-top">
+    <div class="container text-center">
+        <h2 class="display-5 font-light mb-4">
+            Join Our Professional Community
+        </h2>
+        <p class="lead text-muted mb-5 font-light leading-relaxed mx-auto" style="max-width: 600px;">
+            Advance your career in technology through professional development, industry connections, and collaborative innovation.
+        </p>
+        
+        <div class="d-flex flex-column flex-md-row gap-3 justify-content-center mb-5">
+            <a href="{% url 'core:about' %}" class="btn btn-primary btn-lg px-5 py-3 shadow-custom">
+                Learn About Membership
+            </a>
+            <a href="{% url 'core:achievements' %}" class="btn btn-outline-gray btn-lg px-5 py-3">
+                View Our Work
+            </a>
+        </div>
+        
+        <div class="border-top pt-4">
+            <p class="text-muted small mb-0">
+                For inquiries: 
+                <a href="mailto:computerclubniter@gmail.com" class="text-primary text-decoration-none">
+                    computerclubniter@gmail.com
+                </a>
+            </p>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <h1 class="display-5 font-light text-dark mb-4">Achievements</h1>
+            <p class="lead text-muted mx-auto leading-relaxed" style="max-width: 600px;">
+                Celebrating our successes and milestones in technology and innovation
+            </p>
+        </div>
+
+        <!-- Filter by Category -->
+        {% if categories %}
+        <div class="row mb-4">
+            <div class="col-md-6 mx-auto">
+                <form method="GET" class="d-flex gap-2">
+                    <select name="category" class="form-select" onchange="this.form.submit()">
+                        <option value="">All Categories</option>
+                        {% for value, label in categories %}
+                        <option value="{{ value }}" {% if request.GET.category == value %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <a href="{% url 'core:achievements' %}" class="btn btn-outline-secondary">Clear</a>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Achievements Grid -->
+        {% if achievements %}
+        <div class="row g-4">
+            {% for achievement in achievements %}
+            <div class="col-md-6 col-lg-4">
+                <div class="achievement-card h-100">
+                    {% if achievement.image %}
+                    <div class="overflow-hidden">
+                        <img src="{{ achievement.image.url }}" alt="{{ achievement.title }}" class="w-100 achievement-image">
+                    </div>
+                    {% endif %}
+                    <div class="p-4">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <span style="font-size: 1.25rem;">🏆</span>
+                            <h3 class="h6 fw-semibold mb-0">{{ achievement.title }}</h3>
+                        </div>
+                        {% if achievement.date %}
+                        <div class="small text-muted mb-2">
+                            {{ achievement.date|date:"F d, Y" }}
+                        </div>
+                        {% endif %}
+                        {% if achievement.category %}
+                        <span class="badge bg-primary bg-opacity-10 text-primary small mb-2">
+                            {{ achievement.get_category_display }}
+                        </span>
+                        {% endif %}
+                        {% if achievement.description %}
+                        <p class="small text-muted mb-0">
+                            {{ achievement.description|truncatewords:20 }}
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if is_paginated %}
+        <div class="d-flex justify-content-center mt-5">
+            <nav>
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">&laquo; First</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">Previous</a>
+                        </li>
+                    {% endif %}
+                    
+                    <li class="page-item active">
+                        <span class="page-link">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                    </li>
+                    
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">Next</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">Last &raquo;</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+
+        {% else %}
+        <!-- Empty State -->
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="bi bi-trophy"></i>
+            </div>
+            <h3 class="h5 text-muted mb-3">No Achievements Yet</h3>
+            <p class="text-muted">
+                We're working hard on amazing projects. Check back soon to see our accomplishments!
+            </p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

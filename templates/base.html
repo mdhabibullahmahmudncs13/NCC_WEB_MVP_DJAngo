@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ page_title|default:"NITER Computer Club" }}{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    {% load static %}
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="{% block description %}Professional Technology Community at National Institute of Textile Engineering & Research - Advancing technological excellence through innovative projects and industry partnerships{% endblock %}">
+    <meta name="keywords" content="NITER, Computer Club, Technology, Programming, Innovation, Bangladesh">
+    <meta name="author" content="NITER Computer Club">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="{% block og_title %}{{ page_title|default:"NITER Computer Club" }}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Professional Technology Community at NITER{% endblock %}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:site_name" content="NITER Computer Club">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="{% static 'img/ncc-logo.svg' %}">
+    
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="d-flex flex-column min-vh-100">
+    
+    <!-- Header -->
+    <header class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+        <div class="container">
+            <!-- Logo -->
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'core:home' %}">
+                <img src="{% static 'img/ncc-logo.svg' %}" alt="NCC Logo" width="40" height="40" class="me-2">
+                <span class="fw-bold text-dark d-none d-md-inline">NITER Computer Club</span>
+                <span class="fw-bold text-dark d-md-none">NCC</span>
+            </a>
+            
+            <!-- Mobile Toggle -->
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <!-- Navigation -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto me-3">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'core:home' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'core:about' %}">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'segment' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'core:segments' %}">Segments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'members' %}active{% endif %}" href="{% url 'core:members' %}">Our Panel</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle {% if 'project' in request.resolver_match.url_name or 'blog' in request.resolver_match.url_name or 'resource' in request.resolver_match.url_name %}active{% endif %}" 
+                           href="#" role="button" data-bs-toggle="dropdown">
+                            Content
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'core:blog' %}">News & Updates</a></li>
+                            <li><a class="dropdown-item" href="{% url 'core:projects' %}">Projects</a></li>
+                            <li><a class="dropdown-item" href="{% url 'core:resources' %}">Resources</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'core:achievements' %}">Achievements</a></li>
+                            <li><a class="dropdown-item" href="{% url 'core:gallery' %}">Gallery</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'events' %}active{% endif %}" href="{% url 'core:events' %}">Events</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle {% if 'contact' in request.resolver_match.url_name or 'faq' in request.resolver_match.url_name or 'membership' in request.resolver_match.url_name %}active{% endif %}" 
+                           href="#" role="button" data-bs-toggle="dropdown">
+                            More
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'core:contact' %}">Contact Us</a></li>
+                            <li><a class="dropdown-item" href="{% url 'core:faq' %}">FAQ</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'core:membership_application' %}">Join Us</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <!-- Search & Admin -->
+                <div class="d-flex align-items-center">
+                    <!-- Search Form -->
+                    <form class="d-flex me-3" method="GET" action="{% url 'core:search' %}">
+                        <div class="input-group">
+                            <input class="form-control form-control-sm" type="search" name="query" placeholder="Search..." value="{{ request.GET.query }}">
+                            <button class="btn btn-outline-secondary btn-sm" type="submit">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <!-- Admin Links -->
+                    {% if user.is_staff %}
+                        <div class="dropdown">
+                            <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                Admin
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'core:admin_dashboard' %}">Dashboard</a></li>
+                                <li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin Panel</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'admin:logout' %}">Logout</a></li>
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="flex-fill">
+        {% block content %}
+        {% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-dark text-white mt-auto">
+        <div class="container py-5">
+            <div class="row">
+                <!-- Club Info -->
+                <div class="col-lg-6 mb-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="{% static 'img/ncc-logo.svg' %}" alt="NCC Logo" width="48" height="48" class="me-3">
+                        <div>
+                            <h5 class="mb-0 text-white">NITER Computer Club</h5>
+                            <p class="text-white-50 mb-0 small">Professional Technology Community</p>
+                        </div>
+                    </div>
+                    <p class="text-white-50 mb-3">
+                        Advancing technological excellence through innovative projects, industry partnerships, 
+                        and professional development programs at National Institute of Textile Engineering & Research.
+                    </p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white-50 hover-white"><i class="bi bi-facebook fs-5"></i></a>
+                        <a href="#" class="text-white-50 hover-white"><i class="bi bi-linkedin fs-5"></i></a>
+                        <a href="#" class="text-white-50 hover-white"><i class="bi bi-github fs-5"></i></a>
+                        <a href="mailto:computerclubniter@gmail.com" class="text-white-50 hover-white"><i class="bi bi-envelope fs-5"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <h6 class="text-white mb-3">Quick Links</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="{% url 'core:home' %}" class="text-white-50 text-decoration-none hover-white">Home</a></li>
+                        <li class="mb-2"><a href="{% url 'core:about' %}" class="text-white-50 text-decoration-none hover-white">About Us</a></li>
+                        <li class="mb-2"><a href="{% url 'core:segments' %}" class="text-white-50 text-decoration-none hover-white">Segments</a></li>
+                        <li class="mb-2"><a href="{% url 'core:projects' %}" class="text-white-50 text-decoration-none hover-white">Projects</a></li>
+                        <li class="mb-2"><a href="{% url 'core:blog' %}" class="text-white-50 text-decoration-none hover-white">News</a></li>
+                        <li class="mb-2"><a href="{% url 'core:contact' %}" class="text-white-50 text-decoration-none hover-white">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact -->
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <h6 class="text-white mb-3">Contact</h6>
+                    <div class="text-white-50 small">
+                        <div class="mb-2">
+                            <i class="bi bi-geo-alt me-2"></i>
+                            National Institute of Textile Engineering & Research<br>
+                            Savar, Dhaka, Bangladesh
+                        </div>
+                        <div class="mb-2">
+                            <i class="bi bi-envelope me-2"></i>
+                            <a href="mailto:computerclubniter@gmail.com" class="text-white-50 text-decoration-none">
+                                computerclubniter@gmail.com
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Copyright -->
+            <div class="border-top border-secondary pt-4 mt-4 text-center">
+                <p class="text-white-50 small mb-0">
+                    &copy; {% now "Y" %} NITER Computer Club. All rights reserved. | 
+                    Built with ❤️ by NCC Development Team
+                </p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    {% block extra_js %}{% endblock %}
+    
+    <!-- Custom JS -->
+    <script>
+        // Add hover effects for footer links
+        document.querySelectorAll('.hover-white').forEach(link => {
+            link.addEventListener('mouseenter', function() {
+                this.style.color = '#ffffff';
+            });
+            link.addEventListener('mouseleave', function() {
+                this.classList.add('text-white-50');
+                this.style.color = '';
+            });
+        });
+    </script>
+</body>
+</html>

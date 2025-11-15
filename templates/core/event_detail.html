@@ -1,0 +1,246 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'core:home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'core:events' %}">Events</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ event.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Event Header -->
+            <div class="card shadow-sm mb-4">
+                {% if event.image %}
+                <div class="position-relative">
+                    <img src="{{ event.image.url }}" class="card-img-top" alt="{{ event.title }}" 
+                         style="height: 400px; object-fit: cover;">
+                    <div class="position-absolute top-0 start-0 m-3">
+                        <span class="badge bg-{% if event.status == 'upcoming' %}warning{% elif event.status == 'ongoing' %}success{% else %}secondary{% endif %} text-dark fs-6">
+                            {{ event.get_status_display }}
+                        </span>
+                    </div>
+                    {% if event.event_type %}
+                    <div class="position-absolute top-0 end-0 m-3">
+                        <span class="badge bg-primary fs-6">{{ event.get_event_type_display }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+                
+                <div class="card-body">
+                    <h1 class="card-title h2 mb-3">{{ event.title }}</h1>
+                    
+                    <!-- Event Meta Info -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-calendar-alt text-primary me-2"></i>
+                                <strong>Date:</strong>
+                                <span class="ms-2">{{ event.date|date:"F d, Y" }}</span>
+                            </div>
+                            
+                            {% if event.start_time %}
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-clock text-primary me-2"></i>
+                                <strong>Time:</strong>
+                                <span class="ms-2">
+                                    {{ event.start_time|time:"g:i A" }}
+                                    {% if event.end_time %} - {{ event.end_time|time:"g:i A" }}{% endif %}
+                                </span>
+                            </div>
+                            {% endif %}
+                            
+                            {% if event.location %}
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                                <strong>Location:</strong>
+                                <span class="ms-2">{{ event.location }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            {% if event.organizer %}
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-user text-primary me-2"></i>
+                                <strong>Organizer:</strong>
+                                <span class="ms-2">{{ event.organizer }}</span>
+                            </div>
+                            {% endif %}
+                            
+                            {% if event.max_participants %}
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-users text-primary me-2"></i>
+                                <strong>Max Participants:</strong>
+                                <span class="ms-2">{{ event.max_participants }}</span>
+                            </div>
+                            {% endif %}
+                            
+                            {% if event.registration_deadline %}
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-calendar-times text-primary me-2"></i>
+                                <strong>Registration Deadline:</strong>
+                                <span class="ms-2">{{ event.registration_deadline|date:"M d, Y" }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Event Description -->
+                    <div class="mb-4">
+                        <h3 class="h4 mb-3">About This Event</h3>
+                        <div class="event-description">
+                            {{ event.description|linebreaks }}
+                        </div>
+                    </div>
+                    
+                    <!-- Registration Info -->
+                    {% if event.registration_link %}
+                    <div class="alert alert-info">
+                        <h5 class="alert-heading">
+                            <i class="fas fa-info-circle me-2"></i>Registration
+                        </h5>
+                        <p class="mb-2">Ready to join this event? Click the link below to register.</p>
+                        <a href="{{ event.registration_link }}" class="btn btn-primary" target="_blank">
+                            <i class="fas fa-external-link-alt me-2"></i>Register Now
+                        </a>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Additional Notes -->
+                    {% if event.notes %}
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="fas fa-sticky-note me-2"></i>Additional Notes
+                            </h5>
+                            <div class="card-text">
+                                {{ event.notes|linebreaks }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <!-- Quick Info Sidebar -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>Quick Info
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-2">
+                        <div class="col-12">
+                            <div class="text-center p-3 bg-light rounded">
+                                <div class="display-6 fw-bold text-primary">{{ event.date|date:"d" }}</div>
+                                <div class="fw-bold">{{ event.date|date:"M Y" }}</div>
+                                {% if event.start_time %}
+                                <div class="small text-muted">{{ event.start_time|time:"g:i A" }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        {% if event.status == 'upcoming' and event.registration_deadline %}
+                        <div class="col-12 mt-3">
+                            <div class="alert alert-warning mb-0 small">
+                                <strong>Registration closes:</strong><br>
+                                {{ event.registration_deadline|date:"M d, Y" }}
+                                {% if event.registration_deadline|timeuntil %}
+                                <br><small>({{ event.registration_deadline|timeuntil }} left)</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Share Event -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="fas fa-share-alt me-2"></i>Share Event
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-primary btn-sm" onclick="shareEvent()">
+                            <i class="fas fa-link me-2"></i>Copy Link
+                        </button>
+                        <a href="mailto:?subject={{ event.title|urlencode }}&body=Check out this event: {{ request.build_absolute_uri }}" 
+                           class="btn btn-outline-secondary btn-sm">
+                            <i class="fas fa-envelope me-2"></i>Share via Email
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Back to Events -->
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <a href="{% url 'core:events' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to All Events
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function shareEvent() {
+    if (navigator.share) {
+        navigator.share({
+            title: '{{ event.title|escapejs }}',
+            text: '{{ event.description|truncatewords:20|escapejs }}',
+            url: window.location.href
+        });
+    } else {
+        // Fallback to copying URL to clipboard
+        navigator.clipboard.writeText(window.location.href).then(function() {
+            alert('Event link copied to clipboard!');
+        });
+    }
+}
+</script>
+
+<style>
+.event-description {
+    line-height: 1.6;
+}
+
+.event-description p {
+    margin-bottom: 1rem;
+}
+
+.card-header {
+    border-bottom: 1px solid rgba(0,0,0,.125);
+}
+
+.alert {
+    border: none;
+    border-left: 4px solid;
+}
+
+.alert-info {
+    border-left-color: #0dcaf0;
+}
+
+.alert-warning {
+    border-left-color: #ffc107;
+}
+</style>
+{% endblock %}

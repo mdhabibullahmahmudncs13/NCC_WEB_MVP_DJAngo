@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <h1 class="display-5 font-light text-dark mb-4">Contact Us</h1>
+            <p class="lead text-muted mx-auto leading-relaxed" style="max-width: 600px;">
+                Get in touch with us! We're here to help with any questions or collaboration opportunities.
+            </p>
+        </div>
+
+        <div class="row">
+            <!-- Contact Form -->
+            <div class="col-lg-8 mx-auto">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-4 p-lg-5">
+                        <h3 class="h4 fw-semibold mb-4">Send us a Message</h3>
+                        
+                        {% crispy form %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="row mt-5">
+            <div class="col-lg-4">
+                <div class="text-center mb-4">
+                    <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 64px; height: 64px;">
+                        <i class="bi bi-geo-alt text-primary" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <h4 class="h6 fw-semibold mb-3">Location</h4>
+                    <p class="text-muted">
+                        National Institute of Textile Engineering & Research<br>
+                        Savar, Dhaka, Bangladesh
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="text-center mb-4">
+                    <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 64px; height: 64px;">
+                        <i class="bi bi-envelope text-success" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <h4 class="h6 fw-semibold mb-3">Email</h4>
+                    <p class="text-muted">
+                        info@nitercc.com<br>
+                        admin@nitercc.com
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="text-center mb-4">
+                    <div class="bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 64px; height: 64px;">
+                        <i class="bi bi-people text-warning" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <h4 class="h6 fw-semibold mb-3">Social Media</h4>
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="#" class="text-primary"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="text-info"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="text-danger"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="text-dark"><i class="bi bi-github"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Newsletter Subscription -->
+        <div class="bg-light rounded-4 p-4 p-lg-5 text-center mt-5">
+            <h3 class="h4 fw-semibold mb-3">Stay Updated</h3>
+            <p class="text-muted mb-4">Subscribe to our newsletter to receive the latest updates and announcements.</p>
+            
+            <form method="POST" action="{% url 'core:newsletter_subscribe' %}" class="row justify-content-center">
+                {% csrf_token %}
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="email" name="email" class="form-control" placeholder="Enter your email address" required>
+                        <button class="btn btn-primary" type="submit">Subscribe</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

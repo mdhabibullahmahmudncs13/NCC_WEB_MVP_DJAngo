@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <h1 class="display-5 font-light text-dark mb-4">Join Our Community</h1>
+            <p class="lead text-muted mx-auto leading-relaxed" style="max-width: 600px;">
+                Become part of NITER Computer Club and start your journey in the world of technology and innovation
+            </p>
+        </div>
+
+        <!-- Benefits Section -->
+        <div class="row mb-5">
+            <div class="col-lg-10 mx-auto">
+                <h2 class="h4 fw-semibold text-center mb-4">Why Join Us?</h2>
+                <div class="row g-4">
+                    <div class="col-md-6 col-lg-3">
+                        <div class="text-center">
+                            <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 64px; height: 64px;">
+                                <i class="bi bi-code-slash text-primary" style="font-size: 1.5rem;"></i>
+                            </div>
+                            <h4 class="h6 fw-semibold mb-2">Technical Skills</h4>
+                            <p class="text-muted small">Learn cutting-edge technologies and programming languages</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="text-center">
+                            <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 64px; height: 64px;">
+                                <i class="bi bi-people text-success" style="font-size: 1.5rem;"></i>
+                            </div>
+                            <h4 class="h6 fw-semibold mb-2">Networking</h4>
+                            <p class="text-muted small">Connect with like-minded tech enthusiasts and industry professionals</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="text-center">
+                            <div class="bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 64px; height: 64px;">
+                                <i class="bi bi-trophy text-warning" style="font-size: 1.5rem;"></i>
+                            </div>
+                            <h4 class="h6 fw-semibold mb-2">Competitions</h4>
+                            <p class="text-muted small">Participate in programming contests and innovation challenges</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="text-center">
+                            <div class="bg-info bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 64px; height: 64px;">
+                                <i class="bi bi-briefcase text-info" style="font-size: 1.5rem;"></i>
+                            </div>
+                            <h4 class="h6 fw-semibold mb-2">Career Growth</h4>
+                            <p class="text-muted small">Build portfolio projects and gain industry experience</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Application Form -->
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-4 p-lg-5">
+                        <h3 class="h4 fw-semibold mb-4">Membership Application</h3>
+                        
+                        {% crispy form %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Requirements -->
+        <div class="row mt-5">
+            <div class="col-lg-8 mx-auto">
+                <div class="bg-light rounded-4 p-4">
+                    <h4 class="h6 fw-semibold mb-3">Membership Requirements</h4>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Current student at NITER</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Basic interest in technology and programming</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Commitment to participate in club activities</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Willingness to learn and collaborate with others</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <div>
+                <h1 class="h3 fw-semibold text-dark mb-2">Admin Dashboard</h1>
+                <p class="text-muted mb-0">Welcome back! Here's an overview of your website.</p>
+            </div>
+            <a href="{% url 'admin:index' %}" class="btn btn-primary">
+                <i class="bi bi-gear me-2"></i>Admin Panel
+            </a>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-6 col-lg-2-5">
+                <div class="stat-card text-primary">
+                    <div class="stat-number">{{ segments_count }}</div>
+                    <div class="stat-label">Segments</div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-2-5">
+                <div class="stat-card text-success">
+                    <div class="stat-number">{{ members_count }}</div>
+                    <div class="stat-label">Members</div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-2-5">
+                <div class="stat-card text-warning">
+                    <div class="stat-number">{{ achievements_count }}</div>
+                    <div class="stat-label">Achievements</div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-2-5">
+                <div class="stat-card text-info">
+                    <div class="stat-number">{{ photos_count }}</div>
+                    <div class="stat-label">Photos</div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-2-5">
+                <div class="stat-card text-secondary">
+                    <div class="stat-number">{{ events_count }}</div>
+                    <div class="stat-label">Events</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row g-4 mb-5">
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-custom h-100">
+                    <div class="card-header bg-white border-0 d-flex align-items-center gap-2">
+                        <i class="bi bi-plus-circle text-primary"></i>
+                        <h5 class="mb-0">Quick Actions</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'admin:core_segment_add' %}" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-plus me-2"></i>Add Segment
+                            </a>
+                            <a href="{% url 'admin:core_member_add' %}" class="btn btn-outline-success btn-sm">
+                                <i class="bi bi-person-plus me-2"></i>Add Member
+                            </a>
+                            <a href="{% url 'admin:core_achievement_add' %}" class="btn btn-outline-warning btn-sm">
+                                <i class="bi bi-trophy me-2"></i>Add Achievement
+                            </a>
+                            <a href="{% url 'admin:core_galleryphoto_add' %}" class="btn btn-outline-info btn-sm">
+                                <i class="bi bi-image me-2"></i>Add Photo
+                            </a>
+                            <a href="{% url 'admin:core_event_add' %}" class="btn btn-outline-secondary btn-sm">
+                                <i class="bi bi-calendar-plus me-2"></i>Add Event
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-custom h-100">
+                    <div class="card-header bg-white border-0 d-flex align-items-center gap-2">
+                        <i class="bi bi-people text-success"></i>
+                        <h5 class="mb-0">Recent Members</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if recent_members %}
+                            {% for member in recent_members %}
+                            <div class="d-flex align-items-center gap-3 mb-3">
+                                {% if member.photo %}
+                                    <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                                {% else %}
+                                    <div class="bg-light rounded-circle d-flex align-items-center justify-content-center text-muted" style="width: 40px; height: 40px;">
+                                        {{ member.name|first|upper }}
+                                    </div>
+                                {% endif %}
+                                <div class="flex-fill">
+                                    <h6 class="mb-0 small">{{ member.name }}</h6>
+                                    <p class="text-muted small mb-0">{{ member.role }}</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted small mb-0">No recent members</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-custom h-100">
+                    <div class="card-header bg-white border-0 d-flex align-items-center gap-2">
+                        <i class="bi bi-calendar text-info"></i>
+                        <h5 class="mb-0">Upcoming Events</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if upcoming_events %}
+                            {% for event in upcoming_events %}
+                            <div class="mb-3">
+                                <h6 class="mb-1 small">{{ event.title }}</h6>
+                                <p class="text-muted small mb-0">
+                                    <i class="bi bi-calendar3 me-1"></i>{{ event.date|date:"M d, Y" }}
+                                </p>
+                                {% if event.location %}
+                                    <p class="text-muted small mb-0">
+                                        <i class="bi bi-geo-alt me-1"></i>{{ event.location }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted small mb-0">No upcoming events</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Management Links -->
+        <div class="card border-0 shadow-custom">
+            <div class="card-header bg-white border-0">
+                <h5 class="mb-0">Manage Content</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6 col-lg-3">
+                        <a href="{% url 'admin:core_segment_changelist' %}" class="btn btn-outline-primary w-100 text-start">
+                            <i class="bi bi-collection me-2"></i>Manage Segments
+                        </a>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <a href="{% url 'admin:core_member_changelist' %}" class="btn btn-outline-success w-100 text-start">
+                            <i class="bi bi-people me-2"></i>Manage Members
+                        </a>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <a href="{% url 'admin:core_achievement_changelist' %}" class="btn btn-outline-warning w-100 text-start">
+                            <i class="bi bi-trophy me-2"></i>Manage Achievements
+                        </a>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <a href="{% url 'admin:core_galleryphoto_changelist' %}" class="btn btn-outline-info w-100 text-start">
+                            <i class="bi bi-images me-2"></i>Manage Gallery
+                        </a>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <a href="{% url 'admin:core_event_changelist' %}" class="btn btn-outline-secondary w-100 text-start">
+                            <i class="bi bi-calendar me-2"></i>Manage Events
+                        </a>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <a href="{% url 'admin:auth_user_changelist' %}" class="btn btn-outline-dark w-100 text-start">
+                            <i class="bi bi-person-gear me-2"></i>Manage Users
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.col-lg-2-5 {
+    flex: 0 0 20%;
+    max-width: 20%;
+}
+
+@media (max-width: 991.98px) {
+    .col-lg-2-5 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+</style>
+{% endblock %}
